@@ -21,7 +21,7 @@ for file in $(git diff --name-only --cached); do
   fi
  
   module=$(getModule "$file");
-  if [[ ! " ${modules[@]} " =~ " ${module} " ]]; then
+  if [[ ! " ${modules[@]} " =~ " $module " ]]; then
     modules+=("$module");
   fi
 done;
