@@ -33,4 +33,4 @@ fi
 modules_arg=$(printf ",%s" "${modules[@]}");
 modules_arg=${modules_arg:1};
 
-mvn -pl "$modules_arg" checkstyle:check;
+mvn -q -pl "$modules_arg" checkstyle:check;
