@@ -1,0 +1,36 @@
+#!/bin/bash
+function getModule() {
+  local path=$1; 
+  while true; do
+    path=$(dirname $path);
+    if [ -f "$path/pom.xml" ] || [ "." == "$path" ]; then
+      echo "$path";
+      return;
+    fi
+  done
+}
+
+modules=();
+
+for file in $(git diff --name-only --cached); do
+  filename=$(basename "$file");
+  ext="${filename##*.}";
+  
+  if [ "java" != "$ext" ]; then
+    continue;
+  fi
+ 
+  module=$(getModule "$file");
+  if [[ ! " ${modules[@]} " =~ " ${module} " ]]; then
+    modules+=("$module");
+  fi
+done;
+
+if [ ${#modules[@]} -eq 0 ]; then
+  exit;
+fi
+
+modules_arg=$(printf ",%s" "${modules[@]}");
+modules_arg=${modules_arg:1};
+
+mvn -pl "$modules_arg" checkstyle:check;
