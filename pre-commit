@@ -3,8 +3,10 @@ function getModule() {
   local path=$1; 
   while true; do
     path=$(dirname $path);
-    if [ -f "$path/pom.xml" ] || [ "." == "$path" ]; then
+    if [ -f "$path/pom.xml" ]; then
       echo "$path";
+      return;
+    elif [[ "./" =~ "$path" ]]; then
       return;
     fi
   done
@@ -21,7 +23,8 @@ for file in $(git diff --name-only --cached); do
   fi
  
   module=$(getModule "$file");
-  if [[ ! " ${modules[@]} " =~ " $module " ]]; then
+  if [ "" != "$module" ] \
+      && [[ ! " ${modules[@]} " =~ " $module " ]]; then
     modules+=("$module");
   fi
 done;
