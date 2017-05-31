@@ -14,14 +14,7 @@ function get_module() {
 
 modules=();
 
-for file in $(git diff --name-only --cached); do
-  filename=$(basename "$file");
-  ext="${filename##*.}";
-  
-  if [ "java" != "$ext" ]; then
-    continue;
-  fi
- 
+for file in $(git diff --name-only --cached \*.java); do
   module=$(get_module "$file");
   if [ "" != "$module" ] \
       && [[ ! " ${modules[@]} " =~ " $module " ]]; then
